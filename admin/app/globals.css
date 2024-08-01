@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .aside-link {
+      @apply font-semibold text-[20px] text-slate-400 hover:text-slate-700 hover:bg-orange-50 rounded-md py-3 px-5  flex items-center gap-2
+  }
+
+    .table-header {
+        @apply grid grid-cols-[0.6fr,1.2fr,1fr,1fr,1fr] place-items-start transition-none py-[1rem] px-[2.4rem] bg-slate-100 border border-slate-200 uppercase font-semibold text-slate-700
+    }
+
+    .table-body {
+        @apply grid grid-cols-[0.6fr,1.2fr,1fr,1fr,1fr] place-items-start transition-none
+    }
+
+}
+
+
+
+
