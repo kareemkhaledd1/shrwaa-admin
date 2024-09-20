@@ -8,7 +8,16 @@ const config: Config = {
     "./ui/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        rotate: {
+          to: { transform: "rotate(1turn)" },
+        },
+      },
+      animation: {
+        rotate: "rotate 1.5s infinite linear",
+      },
+    },
   },
   plugins: [],
 };

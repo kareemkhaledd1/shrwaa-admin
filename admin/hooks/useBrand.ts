@@ -9,7 +9,7 @@ export const useBrand = () => {
   const filterValue = searchParams.get("filter") || "all";
 
   const { isPending, data } = useQuery({
-    queryKey: ["brand", currentPage, filterValue],
+    queryKey: ["brands", currentPage, filterValue],
     queryFn: () => getBrands(currentPage, 8, filterValue),
   });
 

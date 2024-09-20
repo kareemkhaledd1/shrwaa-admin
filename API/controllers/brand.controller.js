@@ -1,13 +1,38 @@
 const { Brand } = require("../models/brand");
 const mongoose = require("mongoose");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/images");
+  },
+  filename: function (req, file, cb) {
+    const fileName = file.originalname.split(" ").join("-");
+
+    cb(null, `${Date.now()}-${fileName}`);
+  },
+});
+
+const upload = multer({ storage });
+
+const getAllBrands = async (req, res) => {
+  try {
+    const brands = await Brand.find();
+    res.status(200).json({ brands });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to get brands" });
+  }
+};
 
 const getBrands = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 8;
-    const skip = (page - 1) * pageSize;
+    const filter = req.query.filter;
 
-    const filter = req.query.filter || "all";
+    const page = parseInt(req.query.page) || 1;
+    const pageSize =
+      filter !== "all" ? null : parseInt(req.query.pageSize) || 8;
+    const skip = (page - 1) * pageSize;
 
     let filterCondition = {};
     if (filter === "available") {
@@ -43,13 +68,15 @@ const getBrand = async (req, res) => {
 };
 
 const newBrand = async (req, res) => {
-  const { name, image, available, published } = req.body;
+  const { name, published } = req.body;
+  const fileName = req.file.filename;
+  const basePath = `${req.protocol}://${req.get("host")}/public/images/`;
+
   try {
     const newBrand = new Brand({
       name,
-      image,
-      available,
       published,
+      image: `${basePath}${fileName}`,
     });
     await newBrand.save();
     res.status(200).json(newBrand);
@@ -63,16 +90,26 @@ const updateBrand = async (req, res) => {
   if (!mongoose.isValidObjectId(req.params.id))
     return res.status(400).send("Invalid brand Id");
 
-  const { name, image, available, published } = req.body;
+  const { name, published } = req.body;
+
+  const brand = await Brand.findById(req.params.id);
+  if (!brand) return res.status(400).send("Brand not found");
+
+  const file = req.file;
+  let imagePath = brand.image;
+  if (file) {
+    const fileName = file.filename;
+    const basePath = `${req.protocol}://${req.get("host")}/public/images/`;
+    imagePath = `${basePath}${fileName}`;
+  }
 
   try {
     const updatedBrand = await Brand.findByIdAndUpdate(
       req.params.id,
       {
         name,
-        image,
-        available,
         published,
+        image: imagePath,
       },
       { new: true },
     );
@@ -105,4 +142,6 @@ module.exports = {
   newBrand,
   updateBrand,
   deleteBrand,
+  getAllBrands,
+  upload,
 };

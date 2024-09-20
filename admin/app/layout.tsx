@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
-import Layout from "@/ui/Layout";
-import QueryProvider from "@/app/QueryProvider";
+import { ReactQueryProvider } from "@/app/Providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({ weight: ["400"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,10 +17,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <QueryProvider>
-          <Layout>{children}</Layout>
-        </QueryProvider>
+      <body className={poppins.className}>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>
   );

@@ -4,7 +4,8 @@
 
 @layer base {
   .aside-link {
-      @apply font-semibold text-[20px] text-slate-400 hover:text-slate-700 hover:bg-orange-50 rounded-md py-3 px-5  flex items-center gap-2
+      @apply  text-[18px] text-slate-500 hover:text-slate-900
+      hover:bg-orange-50 rounded-md py-2 px-3  flex items-center gap-2
   }
 
     .table-header {
@@ -15,6 +16,55 @@
         @apply grid grid-cols-[0.6fr,1.2fr,1fr,1fr,1fr] place-items-start transition-none
     }
 
+}
+
+.spinner {
+    margin: 100px auto;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    text-align: center;
+
+    -webkit-animation: sk-rotate 2.0s infinite linear;
+    animation: sk-rotate 2.0s infinite linear;
+}
+
+.dot1, .dot2 {
+    width: 60%;
+    height: 60%;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    background-color: orange;
+    border-radius: 100%;
+
+    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+    animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.dot2 {
+    top: auto;
+    bottom: 0;
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+@keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+@-webkit-keyframes sk-bounce {
+    0%, 100% { -webkit-transform: scale(0.0) }
+    50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+    0%, 100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    } 50% {
+          transform: scale(1.0);
+          -webkit-transform: scale(1.0);
+      }
 }
 
 

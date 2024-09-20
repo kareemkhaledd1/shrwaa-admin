@@ -1,10 +1,11 @@
-const router = require("express").Router();
+const route = require("express").Router();
 const {
-  getDelegateNotes,
-  createDelegateNote,
+  delegateOrder,
+  getDelegateOrders,
 } = require("../controllers/delegate.controller");
+const { verifyToken } = require("../middleware/verifyToken");
 
-router.get("/", getDelegateNotes);
-router.post("/", createDelegateNote);
+route.post("/create", verifyToken, delegateOrder);
+route.get("/delegate-order", verifyToken, getDelegateOrders);
 
-module.exports = router;
+module.exports = route;

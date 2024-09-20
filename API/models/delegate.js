@@ -1,36 +1,28 @@
 const mongoose = require("mongoose");
 
 const delegateSchema = new mongoose.Schema({
-  delegateName: {
-    type: String,
-    required: true,
-  },
-  cardImages: [
-    {
-      type: String,
-    },
-  ],
-  phoneImages: [
-    {
-      type: String,
-    },
-  ],
-  finalPrice: {
-    type: String,
-    required: true,
-  },
-  batteryStatus: {
+  orderId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "BatteryStatus",
+    ref: "Order",
+    required: true,
   },
-  phoneStatus: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "PhoneStatus",
-    },
-  ],
-  delegateNote: {
+  delegateId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Admin",
+    required: true,
+  },
+  status: {
     type: String,
+    enum: ["pending", "accepted", "rejected"],
+    default: "pending",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 

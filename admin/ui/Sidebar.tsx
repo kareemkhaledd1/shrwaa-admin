@@ -3,7 +3,7 @@ import NavList from "@/ui/NavList";
 
 function Sidebar() {
   return (
-    <aside className="border-r border-gray-200 px-8 h-screen ml-2.5">
+    <aside className="bg-grey-0 p-8 border-r border-grey-100 row-span-full flex flex-col gap-8">
       <Logo />
       <NavList />
     </aside>

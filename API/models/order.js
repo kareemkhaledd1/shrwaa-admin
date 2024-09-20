@@ -41,6 +41,11 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
     },
+    orderStatus: {
+      type: String,
+      enum: ["Pending", "Processing", "Confirmed"],
+      default: "Pending",
+    },
     otpCode: {
       type: String,
     },

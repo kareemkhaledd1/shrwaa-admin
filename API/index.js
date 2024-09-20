@@ -1,3 +1,5 @@
+const path = require("path");
+
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -7,20 +9,27 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 dotenv.config();
+app.use(cookieParser());
 app.use(express.json());
 app.use(morgan("tiny"));
+
+// app.use(express.urlencoded({ extended: true }));
+app.use(
+  "/public/images",
+  express.static(path.join(__dirname, "public/images")),
+);
+
 app.use(
   cors({
     origin: [
+      "http://localhost:3000",
       "http://localhost:3003",
       "http://localhost:4000",
-      "http://localhost:3000",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   }),
 );
-app.use(cookieParser());
 
 const brandRoutes = require("./routes/brand.route.js");
 app.use("/brand", brandRoutes);
@@ -43,8 +52,8 @@ app.use("/batteryStatus", batteryStatusRoutes);
 const phoneStatusRoutes = require("./routes/phoneStatus.route");
 app.use("/phoneStatus", phoneStatusRoutes);
 
-const delegateRoute = require("./routes/delegate.route");
-app.use("/delegate", delegateRoute);
+const delegateRoutes = require("./routes/delegate.route");
+app.use("/delegate", delegateRoutes);
 
 mongoose
   .connect(process.env.MONGO_URL)

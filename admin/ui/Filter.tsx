@@ -29,7 +29,7 @@ function Filter({
       {options.map((option) => (
         <button
           key={option.value}
-          className={`border-none rounded font-semibold text-sm py-[0.44rem] px-[0.8rem] transition-all duration-300 ${currentFilter === option.value ? "bg-orange-500 text-white" : "bg-white text-slate-700"}`}
+          className={`border-none rounded  text-sm py-[0.44rem] px-[0.8rem] transition-all duration-300 ${currentFilter === option.value ? "bg-orange-500 text-white" : "bg-white text-slate-700"}`}
           onClick={() => handleFilter(option.value)}
         >
           {option.label}

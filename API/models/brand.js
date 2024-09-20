@@ -9,10 +9,6 @@ const brandSchema = new mongoose.Schema({
   image: {
     type: String,
   },
-  available: {
-    type: Boolean,
-    default: false,
-  },
   published: {
     type: Boolean,
     default: false,

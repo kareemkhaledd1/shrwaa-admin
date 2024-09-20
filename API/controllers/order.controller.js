@@ -9,16 +9,67 @@ const client = twilio(accountSid, authToken);
 
 let order, otpCode;
 
-const getOrders = async (req, res) => {
+const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find(
-      {},
-      { otpCode: false, otpCodeExpire: false },
-    ).populate("product");
+    const orders = await Order.find();
     res.status(200).json(orders);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to get users" });
+    res.status(500).json({ message: "Failed to get orders" });
+  }
+};
+
+const aggregateOrders = async (req, res) => {
+  try {
+    const orders = await Order.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }, // Group by day
+          },
+          count: { $sum: 1 }, // Count the number of orders per day
+        },
+      },
+      {
+        $sort: { _id: 1 }, // Sort by date
+      },
+    ]);
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+const getOrders = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12;
+    const skip = (page - 1) * limit;
+    const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
+
+    let filter = {};
+
+    const search = req.query.search || "";
+
+    if (search) {
+      filter.$or = [{ username: { $regex: search, $options: "i" } }];
+    }
+
+    const totalCount = await Order.countDocuments(filter);
+
+    const orders = await Order.find(filter, {
+      otpCode: false,
+      otpCodeExpire: false,
+    })
+      .populate("product")
+      .skip(skip)
+      .sort({ createdAt: sortOrder })
+      .limit(limit);
+
+    res.status(200).json({ orders, totalCount });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to get orders" });
   }
 };
 
@@ -29,7 +80,7 @@ const getOrder = async (req, res) => {
     res.status(200).json(order);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to get user" });
+    res.status(500).json({ message: "Failed to get order" });
   }
 };
 
@@ -129,11 +180,13 @@ const verifyUser = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to verify user" });
+    res.status(500).json({ message: "Failed to verify order" });
   }
 };
 
 module.exports = {
+  aggregateOrders,
+  getAllOrders,
   getOrders,
   getOrder,
   newOrder,
